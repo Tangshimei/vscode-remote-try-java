@@ -1,19 +1,19 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.185.0/containers/java/.devcontainer/base.Dockerfile
-ARG VARIANT="14"
-FROM mcr.microsoft.com/vscode/devcontainers/java:0-${VARIANT}
+# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.192.0/containers/java-8/.devcontainer/base.Dockerfile
 
-# [Optional] Install Maven or Gradle
+FROM mcr.microsoft.com/vscode/devcontainers/java:0-8
+
+# [Option] Install Maven
 ARG INSTALL_MAVEN="false"
-ARG MAVEN_VERSION=3.6.3
+ARG MAVEN_VERSION=""
+# [Option] Install Gradle
 ARG INSTALL_GRADLE="false"
-ARG GRADLE_VERSION=5.4.1
-RUN if [ "${INSTALL_MAVEN}" = "true" ]; then su vscode -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven \"${MAVEN_VERSION}\""; fi \
-    && if [ "${INSTALL_GRADLE}" = "true" ]; then su vscode -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install gradle \"${GRADLE_VERSION}\""; fi
+ARG GRADLE_VERSION=""
+RUN if [ "${INSTALL_MAVEN}" = "true" ]; then su vscode -c "umask 0002 && . /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven \"${MAVEN_VERSION}\""; fi \
+    && if [ "${INSTALL_GRADLE}" = "true" ]; then su vscode -c "umask 0002 && . /usr/local/sdkman/bin/sdkman-init.sh && sdk install gradle \"${GRADLE_VERSION}\""; fi
 
-# [Optional] Install a version of Node.js using nvm for front end dev
-ARG INSTALL_NODE="true"
+# [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
 ARG NODE_VERSION="lts/*"
-RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "source /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
+RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
